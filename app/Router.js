@@ -1,41 +1,77 @@
-let MessageType = {
-  'CLIENT_JOIN': 'enter',
-  'PLAYER_POSITION': 'position'
-};
-Object.freeze(MessageType);
+const uuid = require('uuid/v1');
+const url = require('url');
+const WebSocket = require('ws');
 
 class Router {
-  constructor(game) {
+  constructor(game, server) {
     this.game = game;
 
-    this.onRecieve = this.onRecieve.bind(this);
-    this._onPlayerUpdate = this._onPlayerUpdate.bind(this);
-    this._onPlayerPositionUpdate = this._onPlayerPositionUpdate.bind(this);
+    this.wss = new WebSocket.Server({
+       server: server,
+       verifyClient: this.onHandshake
+    });
+
+    this.wss.on('connection', (ws, req) => {
+      const name = parseUrlParameters(req.url)['name'];
+      const player = this.game.addPlayer(name);
+      ws.player = player;
+
+      console.log('Player ' + name + ' joined the game');
+
+      ws.on('message', message => this.onMessage(message, ws))
+    });
+
+    setInterval(() => {
+      const positions = game.players.map( player => {
+        return {
+          name: player.name,
+          x: player.position[0],
+          y: player.position[1],
+          z: player.position[2]
+        }
+      });
+
+      this.wss.clients.forEach(ws => {
+        if(ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(positions));
+        }
+      });
+    }, 1000);
   }
 
-  onRecieve(json) {
-    this._onPlayerUpdate(json);
-  }
-
-  _onPlayerUpdate(json) {
-    switch(json['type']) {
-      case MessageType.PLAYER_POSITION:
-        this._onPlayerPositionUpdate(json);
-        break;
-      case MessageType.CLIENT_JOIN:
-        this.game.addPlayer(json);
+  onMessage(message, ws) {
+    const info = JSON.parse(message);
+    const player = ws.player;
+    switch(info.type) {
+      case 'position':
+        player.updatePosition(info.x, info.y, info.z);
         break;
       default:
-        console.log(json['type']);
-        console.log('Unhandled socket message:');
+        console.log('Unable to handle message from ' + player.name);
     }
   }
 
-  _onPlayerPositionUpdate(json) {
-    let id = json['id'];
-    let player = this.game.players[id];
-    player.positionUpdate(json);
+  onHandshake(info) {
+    try {
+      let params = parseUrlParameters(info.req.url);
+      return params.hasOwnProperty('name');
+    } catch(e) {
+      return false;
+    }
   }
+
+}
+
+function parseUrlParameters(url) {
+  let parsed = {};
+  let input = url.substring(2).split('&');
+  input.forEach(s => {
+    [key, value] = s.split('=');
+    if(key !== '') {
+      parsed[key] = value;
+    }
+  });
+  return parsed;
 }
 
 module.exports = Router;

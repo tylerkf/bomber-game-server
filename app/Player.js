@@ -1,16 +1,14 @@
 class Player {
-  constructor(id, name) {
-    this.id = id;
+  constructor(name) {
     this.name = name;
     this.position = [0, 0, 0];
 
-    console.log('New player created: (' + this.name + ',' + this.id + ')');
+    console.log('New player created: (' + this.name + ')');
   }
 
-  positionUpdate(json) {
-    let pos = json['position'];
-    this.position = [pos['x'], pos['y'], pos['z']];
-    console.log('Received/processed pos update for player: ' + this.id);
+  updatePosition(x, y, z) {
+    this.position = [x, y, z];
+    console.log(this.name + "'s position is now " + JSON.stringify(this.position));
   }
 
 }

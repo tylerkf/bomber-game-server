@@ -2,28 +2,17 @@ console.log('Starting bomber-game server');
 
 const debug = require('debug')('bomber-game-server:server');
 const http = require('http');
-const WebSocket = require('ws');
-
-const Game = require('../app/Game.js');
-const Router = require('../app/Router.js');
-
-const game = new Game();
-const router = new Router(game);
 
 const server = http.createServer((function(request, response) {
   response.writeHead(200, {'Content-Type': 'text/plain'});
   response.end('This is just a Socket API, no website here!');
 }));
 
-const wss = new WebSocket.Server({ server });
+const Game = require('../app/Game.js');
+const Router = require('../app/Router.js');
 
-wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(message) {
-    router.onRecieve(JSON.parse(message));
-  });
-
-  ws.send('something');
-});
+const game = new Game();
+const router = new Router(game, server);
 
 server.listen(3000);
 server.on('error', onError);

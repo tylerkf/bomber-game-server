@@ -1,14 +1,16 @@
-const uuid = require('uuid/v1');
 const Player = require('../app/Player.js');
 
 class Game {
   constructor() {
-    this.players = {};
+    this.players = [];
+
+    this.addPlayer = this.addPlayer.bind(this);
   }
 
-  addPlayer(json) {
-    let id = uuid();
-    this.players[id] = new Player(id, json['name']);
+  addPlayer(name) {
+    let player = new Player(name);
+    this.players.push(player);
+    return player;
   }
 }
 

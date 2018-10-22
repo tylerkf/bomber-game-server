@@ -2,6 +2,10 @@ const uuid = require('uuid/v1');
 const url = require('url');
 const WebSocket = require('ws');
 
+const GameStateMessage = require('./messages/GameState.js');
+const PlayerJoinedMessage = require('./messages/PlayerJoined.js');
+const PlayerPositionMessage = require('./messages/PlayerPosition.js');
+
 class Router {
   constructor(game, server) {
     this.game = game;
@@ -15,28 +19,18 @@ class Router {
       const name = parseUrlParameters(req.url)['name'];
       const player = this.game.addPlayer(name);
       ws.player = player;
-
       console.log('Player ' + name + ' joined the game');
+
+      let gameState = new GameStateMessage(this.game);
+      ws.send(gameState.asString());
+
+      this.broadcastAll(new PlayerJoinedMessage(player), name);
 
       ws.on('message', message => this.onMessage(message, ws))
     });
 
-    setInterval(() => {
-      const positions = game.players.map( player => {
-        return {
-          name: player.name,
-          x: player.position[0],
-          y: player.position[1],
-          z: player.position[2]
-        }
-      });
+    console.log('Server URL:"ws://localhost:3001"');
 
-      this.wss.clients.forEach(ws => {
-        if(ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify(positions));
-        }
-      });
-    }, 1000);
   }
 
   onMessage(message, ws) {
@@ -45,6 +39,7 @@ class Router {
     switch(info.type) {
       case 'position':
         player.updatePosition(info.x, info.y, info.z);
+        this.broadcastAll(new PlayerPositionMessage(player), player.name);
         break;
       default:
         console.log('Unable to handle message from ' + player.name);
@@ -58,6 +53,14 @@ class Router {
     } catch(e) {
       return false;
     }
+  }
+
+  broadcastAll(message, except = '') {
+    this.wss.clients.forEach(ws => {
+      if(ws.readyState === WebSocket.OPEN && ws.player.name !== except) {
+        ws.send(message.asString());
+      }
+    });
   }
 
 }

@@ -7,7 +7,7 @@ class GameStateMessage extends Message {
   }
 
   asJSON() {
-    let players = this.game.players.forEach(p => {
+    let players = this.game.players.map(p => {
       return {
         name: p.name,
         position: p.position
@@ -16,7 +16,8 @@ class GameStateMessage extends Message {
 
     return {
       type: this.type,
-      players: players ? players : []
+      players: players,
+      map: this.game.map
     };
   }
 }

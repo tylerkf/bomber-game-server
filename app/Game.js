@@ -5,7 +5,7 @@ class Game {
     this.players = [];
     this.map = {
       boxes: this.generateBoundary(15).concat([
-        [0,-1],[0,1]
+        [0,-1, 'Wood'],[0,1, 'Wood']
       ]),
       bombs: [
         [[3,-2],1],
@@ -18,14 +18,14 @@ class Game {
 
   generateBoundary(length) {
   	let half = Math.floor(length/2);
-  	let points = [];
+  	let boxes = [];
   	for(let dist = 0; dist < length; dist++) {
-  		points.push([-half + dist, -half]);
-  		points.push([-half + dist, half]);
-  		points.push([-half, -half+dist]);
-  		points.push([half, -half+dist]);
+  		boxes.push([-half + dist, -half, 'Stone']);
+  		boxes.push([-half + dist, half, 'Stone']);
+  		boxes.push([-half, -half+dist, 'Stone']);
+  		boxes.push([half, -half+dist, 'Stone']);
   	}
-  	return points;
+  	return boxes;
   }
 
 

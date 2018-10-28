@@ -34,11 +34,11 @@ class Router {
   }
 
   onMessage(message, ws) {
-    const info = JSON.parse(message);
+    const data = JSON.parse(message);
     const player = ws.player;
-    switch(info.type) {
+    switch(data.type) {
       case 'position':
-        player.updatePosition(info.x, info.y, info.z);
+        player.updatePosition(data.x, data.y, data.z);
         this.broadcastAll(new PlayerPositionMessage(player), player.name);
         break;
       default:

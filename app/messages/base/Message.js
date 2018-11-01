@@ -4,7 +4,7 @@ class Message {
   }
 
   asString() {
-    console.log(JSON.stringify(this.asJSON()));
+    //console.log(JSON.stringify(this.asJSON()));
     return JSON.stringify(this.asJSON());
   }
 

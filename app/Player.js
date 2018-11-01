@@ -8,7 +8,7 @@ class Player {
 
   updatePosition(x, y, z) {
     this.position = [x, y, z];
-    console.log(this.name + "'s position is now " + JSON.stringify(this.position));
+    //console.log(this.name + "'s position is now " + JSON.stringify(this.position));
   }
 
 }

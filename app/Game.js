@@ -6,7 +6,7 @@ class Game {
     this.map = {
       boxes: this.generateBoundary(15).concat([
         [0,-1, 'Wood'],[0,1, 'Wood']
-      ]),
+      ]).concat(this.generateBoundary(6)),
       bombs: [
         [[3,-2],1],
         [[-2,3],2]

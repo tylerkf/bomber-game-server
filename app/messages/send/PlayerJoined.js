@@ -1,8 +1,9 @@
-const Message = require('./base/Message.js');
+const Message = require('./Message.js');
 
-class PlayerPositionMessage extends Message {
+class PlayerJoinedMessage extends Message {
+
   constructor(player) {
-    super('player position');
+    super('player joined');
     this.player = player;
   }
 
@@ -13,6 +14,7 @@ class PlayerPositionMessage extends Message {
       position: this.player.position
     };
   }
+
 }
 
-module.exports = PlayerPositionMessage;
+module.exports = PlayerJoinedMessage;

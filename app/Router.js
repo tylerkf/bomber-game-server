@@ -2,9 +2,10 @@ const uuid = require('uuid/v1');
 const url = require('url');
 const WebSocket = require('ws');
 
-const GameStateMessage = require('./messages/GameState.js');
-const PlayerJoinedMessage = require('./messages/PlayerJoined.js');
-const PlayerPositionMessage = require('./messages/PlayerPosition.js');
+const GameStateMessage = require('./messages/send/GameState.js');
+const PlayerJoinedMessage = require('./messages/send/PlayerJoined.js');
+const PlayerPositionMessage = require('./messages/send/PlayerPosition.js');
+const ConsoleMessage = require('./messages/send/ConsoleMessage.js');
 
 class Router {
   constructor(game, server) {
@@ -19,7 +20,10 @@ class Router {
       const name = parseUrlParameters(req.url)['name'];
       const player = this.game.addPlayer(name);
       ws.player = player;
-      console.log('Player ' + name + ' joined the game');
+
+      let welcomeMessage = 'Player ' + name + ' joined the game';
+      console.log(welcomeMessage);
+      this.broadcastAll(new ConsoleMessage(welcomeMessage, 'Server'));
 
       let gameState = new GameStateMessage(this.game);
       ws.send(gameState.asString());
@@ -37,6 +41,8 @@ class Router {
     const data = JSON.parse(message);
     const player = ws.player;
     switch(data.type) {
+      case 'message':
+
       case 'position':
         player.updatePosition(data.x, data.y, data.z);
         this.broadcastAll(new PlayerPositionMessage(player), player.name);

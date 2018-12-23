@@ -66,9 +66,10 @@ class Router {
   }
 
   broadcastAll(message, except = '') {
+    let bytes = message.asString();
     this.wss.clients.forEach(ws => {
       if(ws.readyState === WebSocket.OPEN && ws.player.name !== except) {
-        ws.send(message.asString());
+        ws.send(bytes);
       }
     });
   }

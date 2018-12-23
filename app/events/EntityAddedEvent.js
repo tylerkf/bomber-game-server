@@ -1,3 +1,5 @@
+const Event = require('./Event.js');
+
 class EntityAddedEvent extends Event {
   constructor(entity) {
     super('entity added');
@@ -5,3 +7,5 @@ class EntityAddedEvent extends Event {
     this.object = entity.object;
   }
 }
+
+module.exports = EntityAddedEvent;

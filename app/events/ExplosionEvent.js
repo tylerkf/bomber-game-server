@@ -1,3 +1,5 @@
+const Event = require('./Event.js');
+
 class ExplosionEvent extends Event {
   constructor(position) {
     super('explosion');

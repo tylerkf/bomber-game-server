@@ -2,10 +2,11 @@ const uuid = require('uuid/v1');
 const url = require('url');
 const WebSocket = require('ws');
 
-const GameStateMessage = require('./messages/send/GameState.js');
-const PlayerJoinedMessage = require('./messages/send/PlayerJoined.js');
-const PlayerPositionMessage = require('./messages/send/PlayerPosition.js');
-const ConsoleMessage = require('./messages/send/ConsoleMessage.js');
+const GameStateMessage = require('./networking/send/GameStateMessage.js');
+const GameStateUpdateMessage = require('./networking/send/GameStateUpdateMessage.js');
+const ConsoleMessage = require('./networking/send/ConsoleMessage.js');
+
+const PlayerStateHandler = require('./networking/recieve/PlayerStateHandler.js');
 
 class Router {
   constructor(game, server) {
@@ -15,6 +16,9 @@ class Router {
        server: server,
        verifyClient: this.onHandshake
     });
+
+    let messageHandlers = {};
+    messageHandlers['player state'] = new PlayerStateHandler();
 
     this.wss.on('connection', (ws, req) => {
       const name = parseUrlParameters(req.url)['name'];
@@ -28,27 +32,27 @@ class Router {
       let gameState = new GameStateMessage(this.game);
       ws.send(gameState.asString());
 
-      this.broadcastAll(new PlayerJoinedMessage(player), name);
-
-      ws.on('message', message => this.onMessage(message, ws))
+      ws.on('message', message => this.onMessage(message, ws, messageHandlers))
     });
+
+    let gameStateUpdate = new GameStateUpdateMessage(this.game);
+    setInterval(() => {
+      this.broadcastAll(gameStateUpdate);
+    }, 33);
 
     console.log('Server URL:"ws://localhost:3001"');
 
   }
 
-  onMessage(message, ws) {
+  onMessage(message, ws, handlers) {
     const data = JSON.parse(message);
     const player = ws.player;
-    switch(data.type) {
-      case 'message':
 
-      case 'position':
-        player.updatePosition(data.x, data.y, data.z);
-        this.broadcastAll(new PlayerPositionMessage(player), player.name);
-        break;
-      default:
-        console.log('Unable to handle message from ' + player.name);
+    try {
+      handlers[data.type].handle(player, data);
+    } catch(error) {
+      console.error('Failed to handle server message from ' + player.name);
+      console.error(error);
     }
   }
 

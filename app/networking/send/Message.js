@@ -4,11 +4,11 @@ class Message {
   }
 
   asString() {
-    //console.log(JSON.stringify(this.asJSON()));
-    return JSON.stringify(this.asJSON());
+    const obj = Object.assign({type: this.type},this.generate());
+    return JSON.stringify(obj);
   }
 
-  asJSON() {
+  generate() {
     return {type: this.type};
   }
 }

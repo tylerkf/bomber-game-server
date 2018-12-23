@@ -8,9 +8,8 @@ class ConsoleMessage extends Message {
     this.from = from;
   }
 
-  asJSON() {
+  generate() {
     return {
-      type: this.type,
       text: this.text,
       from: this.from
     };

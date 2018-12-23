@@ -7,18 +7,10 @@ class GameStateMessage extends Message {
     this.game = game;
   }
 
-  asJSON() {
-    let players = this.game.players.map(p => {
-      return {
-        name: p.name,
-        position: p.position
-      };
-    })
-
+  generate() {
     return {
-      type: this.type,
-      players: players,
-      map: this.game.map
+      players: this.game.players,
+      map: this.game.map,
     };
   }
 

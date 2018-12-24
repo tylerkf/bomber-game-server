@@ -1,81 +1,61 @@
-const Player = require('./Player.js');
-const Entity = require('./Entity.js');
+const Player = require('./entities/Player.js');
 
 const EntityAddedEvent = require('./events/EntityAddedEvent.js');
-const EntityMovedEvent = require('./events/EntityMovedEvent.js');
 const EntityRemovedEvent = require('./events/EntityRemovedEvent.js');
 const ExplosionEvent = require('./events/ExplosionEvent.js');
+
+const MapFactory = require('./utils/MapFactory.js');
 
 class Game {
   constructor() {
     this.players = [];
     this.events = []; // Stack of events cleared every time the state of the game is broadcast
     this.map = {
-      boxes: [],
-      bombs: []
+      box: [],
+      bomb: []
     };
-    setupMap(this.map);
 
-    let movingBox = createBox('Wood', [-3, 2]);
-    this.add('boxes', movingBox);
-    this.intervalTest = setInterval(() => {
-      if(movingBox.object.position[1] >= 4) {
-        movingBox.object.position[1]=2;
-      } else {
-        movingBox.object.position[1]+=0.05;
-      }
-      this.events.push(new EntityMovedEvent(movingBox));
-    }, 50);
+    MapFactory.createStartingMap(this);
   }
 
   addPlayer(name) {
     let player = new Player(name);
     this.players.push(player);
-
-    this.events.push(new ExplosionEvent([2,1]));
     return player;
   }
 
-  add(type, entity) {
-    this.map[type].push(entity);
+  add(entity) {
+    this.map[entity.object.type].push(entity);
     this.events.push(new EntityAddedEvent(entity));
   }
 
-  remove(type, entity) {
-    this.map[type] = this.map[type].filter(e => e.tag !== entity.tag);
+  remove(entity) {
+    this.map[entity.object.type] = this.map[entity.object.type].filter(e => e.tag !== entity.tag);
     this.events.push(new EntityRemovedEvent(entity));
   }
 
   clearEvents() {
     this.events = [];
   }
+
+  getBox(position) {
+    return this.map.box.find(box => positionsEqual(box.object.position, position));
+  }
 }
 
 // Messy non OOP methods need formalising in a class
 
-function setupMap(map) {
-  map.boxes = generateBoundary(10);
-  map.boxes.push(createBox('Wood', [4, 0]));
-}
-
-function generateBoundary(length) {
-  let half = Math.floor(length/2);
-  let boxes = [];
-  for(let dist = 0; dist < length; dist++) {
-    boxes.push(createBox('Stone', [-half + dist, -half]));
-    boxes.push(createBox('Stone', [-half + dist, half]));
-    boxes.push(createBox('Stone', [-half, -half+dist]));
-    boxes.push(createBox('Stone', [half, -half+dist]));
+function positionsEqual(posA, posB) {
+  if(posA.length !== posB.length) {
+    return false;
   }
-  return boxes;
-}
 
-function createBox(texture, position) {
-  return new Entity({
-    type: 'box',
-    texture: texture,
-    position: position
-  });
+  for(let i = 0; i < posA.length; i++) {
+    if(posA[i] !== posB[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 module.exports = Game;

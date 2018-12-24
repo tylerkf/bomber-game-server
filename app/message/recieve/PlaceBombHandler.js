@@ -7,7 +7,7 @@ class PlaceBombHandler {
   }
 
   handle(player, message) {
-    let bomb = createBomb(message.level, player.position);
+    let bomb = createBomb(message.level, [Math.round(player.position[0]), Math.round(player.position[1])]);
     this.game.add('bombs', bomb);
     setTimeout(() => {
       this.game.remove('bombs', bomb);

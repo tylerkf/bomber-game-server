@@ -17,8 +17,8 @@ class Game {
     setupMap(this.map);
 
     let movingBox = createBox('Wood', [-3, 2]);
-    this.map.boxes.push(movingBox);
-    setInterval(() => {
+    this.add('boxes', movingBox);
+    this.intervalTest = setInterval(() => {
       if(movingBox.object.position[1] >= 4) {
         movingBox.object.position[1]=2;
       } else {
@@ -50,6 +50,8 @@ class Game {
     this.events = [];
   }
 }
+
+// Messy non OOP methods need formalising in a class
 
 function setupMap(map) {
   map.boxes = generateBoundary(10);

@@ -2,12 +2,12 @@ const uuid = require('uuid/v1');
 const url = require('url');
 const WebSocket = require('ws');
 
-const GameStateMessage = require('./networking/send/GameStateMessage.js');
-const GameStateUpdateMessage = require('./networking/send/GameStateUpdateMessage.js');
-const ConsoleMessage = require('./networking/send/ConsoleMessage.js');
+const GameStateMessage = require('./message/send/GameStateMessage.js');
+const GameStateUpdateMessage = require('./message/send/GameStateUpdateMessage.js');
+const ConsoleMessage = require('./message/send/ConsoleMessage.js');
 
-const PlayerStateHandler = require('./networking/recieve/PlayerStateHandler.js');
-const PlaceBombHandler = require('./networking/recieve/PlaceBombHandler.js');
+const PlayerStateHandler = require('./message/recieve/PlayerStateHandler.js');
+const PlaceBombHandler = require('./message/recieve/PlaceBombHandler.js');
 
 const Authenticator = require('./Authenticator.js');
 

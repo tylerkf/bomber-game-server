@@ -76,12 +76,4 @@ function createBox(texture, position) {
   });
 }
 
-function createBomb(level, position) {
-  return new Entity({
-    type: 'bomb',
-    level: level,
-    position: position
-  });
-}
-
 module.exports = Game;

@@ -3,7 +3,7 @@ const Event = require('./Event.js');
 class EntityRemovedEvent extends Event {
   constructor(entity) {
     super('entity removed')
-    self.tag = entity.tag;
+    this.tag = entity.tag;
   }
 }
 

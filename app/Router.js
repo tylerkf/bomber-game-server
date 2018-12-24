@@ -7,6 +7,7 @@ const GameStateUpdateMessage = require('./networking/send/GameStateUpdateMessage
 const ConsoleMessage = require('./networking/send/ConsoleMessage.js');
 
 const PlayerStateHandler = require('./networking/recieve/PlayerStateHandler.js');
+const PlaceBombHandler = require('./networking/recieve/PlaceBombHandler.js');
 
 class Router {
   constructor(game, server) {
@@ -19,6 +20,7 @@ class Router {
 
     let messageHandlers = {};
     messageHandlers['player state'] = new PlayerStateHandler();
+    messageHandlers['place bomb'] = new PlaceBombHandler(this.game);
 
     this.wss.on('connection', (ws, req) => {
       const name = parseUrlParameters(req.url)['name'];

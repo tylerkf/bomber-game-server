@@ -15,6 +15,9 @@ class MapFactory {
     let boundary = this._generateBoundary(10);
     this._addEntities(game, boundary);
 
+    let woodBoxes = this._generateWoodBoxes(10);
+    this._addEntities(game, woodBoxes);
+
     this._testMovingBox(game);
   }
 
@@ -38,7 +41,16 @@ class MapFactory {
   }
 
   static _generateWoodBoxes(boundaryLength) {
-
+    let boxes = [];
+    let cursor = [Math.floor(boundaryLength/2)-1,Math.floor(boundaryLength/2)-1];
+    for(let i = 0; i < boundaryLength - 1; i++) {
+      for(let j = 0; j < boundaryLength - 1; j++) {
+        if(Math.random() >= 0.5) {
+          boxes.push(new BoxEntity('Wood', [cursor[0] - i, cursor[1] - j]));
+        }
+      }
+    }
+    return boxes;
   }
 
   static _testMovingBox(game) {

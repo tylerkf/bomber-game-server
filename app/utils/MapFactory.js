@@ -20,11 +20,11 @@ class MapFactory {
     let boundary = this._generateBoundary(size);
     this._addEntities(game, boundary);
 
-    //let woodBoxes = this._generateWoodBoxes(size);
-    //this._addEntities(game, woodBoxes);
-
     let grid = this._generateGridBoundaries(size);
     this._addEntities(game, grid);
+
+    let woodBoxes = this._generateWoodBoxes(size, game);
+    this._addEntities(game, woodBoxes);
 
     this._testMovingBox(game);
   }
@@ -61,13 +61,16 @@ class MapFactory {
     return boxes;
   }
 
-  static _generateWoodBoxes(size) {
+  static _generateWoodBoxes(size, game) {
     let boxes = [];
     let cursor = [Math.floor(size/2)-1,Math.floor(size/2)-1];
     for(let i = 0; i < size - 2; i++) {
       for(let j = 0; j < size - 2; j++) {
-        if(Math.random() >= 0.5 && cursor[0] - i !== 0 && cursor[1] - j !== 0) {
-          boxes.push(new BoxEntity('Wood', [cursor[0] - i, cursor[1] - j]));
+        let pos = [cursor[0] - i, cursor[1] - j];
+        if(Math.random() >= 0.3 && !(pos[0] === 0 && pos[1] === 0)) {
+          if(typeof game.getBox(pos) === 'undefined') {
+            boxes.push(new BoxEntity('Wood', pos));
+          }
         }
       }
     }
@@ -85,6 +88,19 @@ class MapFactory {
       }
       game.events.push(new EntityMovedEvent(movingBox));
     }, 50);
+  }
+
+  static positionsEqual(posA, posB) {
+    if(posA.length !== posB.length) {
+      return false;
+    }
+
+    for(let i = 0; i < posA.length; i++) {
+      if(posA[i] !== posB[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 

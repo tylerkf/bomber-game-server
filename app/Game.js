@@ -39,23 +39,8 @@ class Game {
   }
 
   getBox(position) {
-    return this.map.box.find(box => positionsEqual(box.object.position, position));
+    return this.map.box.find(box => MapFactory.positionsEqual(box.object.position, position));
   }
-}
-
-// Messy non OOP methods need formalising in a class
-
-function positionsEqual(posA, posB) {
-  if(posA.length !== posB.length) {
-    return false;
-  }
-
-  for(let i = 0; i < posA.length; i++) {
-    if(posA[i] !== posB[i]) {
-      return false;
-    }
-  }
-  return true;
 }
 
 module.exports = Game;

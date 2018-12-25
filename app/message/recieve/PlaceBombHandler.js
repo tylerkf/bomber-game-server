@@ -7,7 +7,7 @@ class PlaceBombHandler {
   }
 
   handle(player, message) {
-    player.placeBomb(message.level, this.game);
+    player.placeBomb(this.game);
   }
 }
 

@@ -1,8 +1,6 @@
 class PlayerStateHandler {
   handle(player, message) {
-    player.position = message.position;
-    player.state = message.state;
-    player.velocity = message.velocity;
+    player.updatePosition(message.position, message.velocity, message.state);
   }
 }
 

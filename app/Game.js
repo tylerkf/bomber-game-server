@@ -38,8 +38,18 @@ class Game {
     this.events = [];
   }
 
+  getPlayers(gridPosition) {
+    return this.players.filter((player) => {
+      return MapFactory.positionsEqual(player.getGridPosition(), gridPosition)
+    });
+  }
+
   getBox(position) {
     return this.map.box.find(box => MapFactory.positionsEqual(box.object.position, position));
+  }
+
+  getBomb(position) {
+    return this.map.bomb.find(bomb => MapFactory.positionsEqual(bomb.object.position, position));
   }
 }
 

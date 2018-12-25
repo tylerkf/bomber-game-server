@@ -1,5 +1,5 @@
 const Entity = require('./Entity.js');
-
+const MapFactory = require('../utils/MapFactory.js');
 const ExplosionEvent = require('../events/ExplosionEvent.js');
 
 class BombEntity extends Entity {
@@ -11,7 +11,15 @@ class BombEntity extends Entity {
     });
   }
 
-  explode(game) {
+  prime(game) {
+    setTimeout(() => {
+      if(game.map.bomb.includes(this)) {
+        this.explode(game);
+      }
+    }, 2000);
+  }
+
+  explode(game, causedBy) {
     let center = this.object.position;
     game.events.push(new ExplosionEvent(center));
 
@@ -20,7 +28,9 @@ class BombEntity extends Entity {
       let dir = directions[i];
       for(let j = 1; j <= this.object.level; j++) {
         let pos = [center[0] + j * dir[0], center[1] + j * dir[1]];
-        if(!this._explodeAt(pos, game)) {
+        if(this._explodeAt(pos, game, causedBy)) {
+          game.getPlayers(pos).forEach(p => p.kill());
+        } else {
           break;
         }
       }
@@ -28,10 +38,21 @@ class BombEntity extends Entity {
     game.remove(this);
   }
 
-  _explodeAt(position, game) {
+  _explodeAt(position, game, ignore) {
+    if(typeof ignore !== 'undefined') {
+      if(MapFactory.positionsEqual(ignore.object.position, position)) {
+        return false;
+      }
+    }
+
     let box = game.getBox(position);
     if(typeof box === 'undefined') {
-      game.events.push(new ExplosionEvent(position));
+      let bomb = game.getBomb(position);
+      if(typeof bomb === 'undefined') {
+        game.events.push(new ExplosionEvent(position));
+      } else {
+        bomb.explode(game, this);
+      }
     } else if (box.object.texture === 'Wood'){
       game.events.push(new ExplosionEvent(position));
       game.remove(box);

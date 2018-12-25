@@ -11,14 +11,35 @@ class MapFactory {
     }
   }
 
-  static createStartingMap(game) {
-    let boundary = this._generateBoundary(10);
+  static createStartingMap(game, size) {
+    if((size % 2) !== 1) {
+      console.error('Error: Game size not odd, setting to default of 11');
+      size = 11;
+    }
+
+    let boundary = this._generateBoundary(size);
     this._addEntities(game, boundary);
 
-    let woodBoxes = this._generateWoodBoxes(10);
-    this._addEntities(game, woodBoxes);
+    //let woodBoxes = this._generateWoodBoxes(size);
+    //this._addEntities(game, woodBoxes);
+
+    let grid = this._generateGridBoundaries(size);
+    this._addEntities(game, grid);
 
     this._testMovingBox(game);
+  }
+
+  static _generateGridBoundaries(size) {
+    let n = Math.floor((size - 5)/2);
+    let boxes = [];
+
+    let cursor = [Math.floor(size/2)-2, Math.floor(size/2)-2]
+    for(let i = 0; i <= n; i++) {
+      for(let j = 0; j <= n; j++) {
+        boxes.push(new BoxEntity('Stone', [cursor[0] - i*2, cursor[1] - j*2]));
+      }
+    }
+    return boxes;
   }
 
   static _addEntities(game, array) {
@@ -27,25 +48,25 @@ class MapFactory {
     }
   }
 
-  static _generateBoundary(length) {
+  static _generateBoundary(size) {
     let directions = [[-1,0],[0,-1],[1,0],[0,1]];
-    let cursor = [Math.floor(length/2),Math.floor(length/2)];
+    let cursor = [Math.floor(size/2),Math.floor(size/2)];
     let boxes = [];
     for(let i = 0; i < directions.length; i++) {
       let dir = directions[i];
-      for(let j = 0; j < length; j++) {
+      for(let j = 0; j < size - 1; j++) {
         boxes.push(new BoxEntity('Stone', [cursor[0]+=dir[0], cursor[1]+=dir[1]]));
       }
     }
     return boxes;
   }
 
-  static _generateWoodBoxes(boundaryLength) {
+  static _generateWoodBoxes(size) {
     let boxes = [];
-    let cursor = [Math.floor(boundaryLength/2)-1,Math.floor(boundaryLength/2)-1];
-    for(let i = 0; i < boundaryLength - 1; i++) {
-      for(let j = 0; j < boundaryLength - 1; j++) {
-        if(Math.random() >= 0.5) {
+    let cursor = [Math.floor(size/2)-1,Math.floor(size/2)-1];
+    for(let i = 0; i < size - 2; i++) {
+      for(let j = 0; j < size - 2; j++) {
+        if(Math.random() >= 0.5 && cursor[0] - i !== 0 && cursor[1] - j !== 0) {
           boxes.push(new BoxEntity('Wood', [cursor[0] - i, cursor[1] - j]));
         }
       }

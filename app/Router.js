@@ -47,7 +47,7 @@ class Router {
     ws.send(gameState.asString());
 
     ws.on('close', () => {
-      this.game.removePlayer(ws.player.name);
+      this.game.removePlayer(ws.player);
       console.log(ws.player.name + ' left the game');
     });
     ws.on('message', message => this.onMessage(message, ws))

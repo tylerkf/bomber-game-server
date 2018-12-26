@@ -1,5 +1,7 @@
 const Player = require('./entities/Player.js');
 
+const PlayerAddedEvent = require('./events/PlayerAddedEvent.js');
+const PlayerRemovedEvent = require('./events/PlayerRemovedEvent.js');
 const EntityAddedEvent = require('./events/EntityAddedEvent.js');
 const EntityRemovedEvent = require('./events/EntityRemovedEvent.js');
 const ExplosionEvent = require('./events/ExplosionEvent.js');
@@ -21,11 +23,13 @@ class Game {
   addPlayer(name) {
     let player = new Player(name);
     this.players.push(player);
+    this.events.push(new PlayerAddedEvent(player));
     return player;
   }
 
-  removePlayer(name) {
-    this.players = this.players.filter(p => p.name !== name);
+  removePlayer(player) {
+    this.events.push(new PlayerRemovedEvent(player));
+    this.players = this.players.filter(p => p.name !== player.name);
   }
 
   add(entity) {

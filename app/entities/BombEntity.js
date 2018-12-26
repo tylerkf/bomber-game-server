@@ -22,10 +22,8 @@ class BombEntity extends Entity {
   explode(game, causedBy) {
     let center = this.object.position;
     game.events.push(new ExplosionEvent(center));
-
-    let directions = [[1,0], [-1,0], [0,1], [0,-1]];
-    for(let i = 0; i < directions.length; i++) {
-      let dir = directions[i];
+    game.getPlayers(center).forEach(p => p.kill());
+    [[1,0], [-1,0], [0,1], [0,-1]].forEach((dir) => {
       for(let j = 1; j <= this.object.level; j++) {
         let pos = [center[0] + j * dir[0], center[1] + j * dir[1]];
         if(this._explodeAt(pos, game, causedBy)) {
@@ -34,7 +32,7 @@ class BombEntity extends Entity {
           break;
         }
       }
-    }
+    });
     game.remove(this);
   }
 

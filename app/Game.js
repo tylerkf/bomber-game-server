@@ -15,7 +15,7 @@ class Game {
       bomb: []
     };
 
-    MapFactory.createStartingMap(this, 15); // 5, 9,
+    MapFactory.createStartingMap(this, 15);
   }
 
   addPlayer(name) {

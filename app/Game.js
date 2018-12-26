@@ -24,6 +24,10 @@ class Game {
     return player;
   }
 
+  removePlayer(name) {
+    this.players = this.players.filter(p => p.name !== name);
+  }
+
   add(entity) {
     this.map[entity.object.type].push(entity);
     this.events.push(new EntityAddedEvent(entity));

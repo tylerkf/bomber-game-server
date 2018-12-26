@@ -12,6 +12,7 @@ const PlaceBombHandler = require('./message/recieve/PlaceBombHandler.js');
 const Authenticator = require('./Authenticator.js');
 
 class Router {
+
   constructor(game, server) {
     this.game = game;
     this.authenticator = new Authenticator(game);
@@ -45,6 +46,10 @@ class Router {
     let gameState = new GameStateMessage(this.game);
     ws.send(gameState.asString());
 
+    ws.on('close', () => {
+      this.game.removePlayer(ws.player.name);
+      console.log(ws.player.name + ' left the game');
+    });
     ws.on('message', message => this.onMessage(message, ws))
   }
 

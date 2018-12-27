@@ -24,7 +24,7 @@ class Player {
   }
 
   placeBomb(game) {
-    let bomb = new BombEntity(this.level, [Math.round(this.position[0]), Math.round(this.position[1])]);
+    let bomb = new BombEntity(this.level, this.getGridPosition());
     game.add(bomb);
     bomb.prime(game);
   }
@@ -32,7 +32,11 @@ class Player {
   kill() {
     console.log(this.name + ' died');
     this.isdead = true;
-    this.position = [-10, 0, 0];
+    this.position = [0, 0, 0];
+
+    setTimeout(() => {
+      this.isdead = false;
+    }, 3000);
   }
 }
 

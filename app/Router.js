@@ -32,25 +32,26 @@ class Router {
     setInterval(() => {
       this.broadcastAll(gameStateUpdate);
     }, 33);
-
-    console.log('Server URL:"ws://localhost:3001"');
   }
 
   onConnection(ws, req) {
     const player = this.game.addPlayer(req.requestedName);
     ws.player = player;
 
-    let welcome = new ConsoleMessage('Player ' + ws.player.name + ' joined the game', 'Server');
+    let welcome = new ConsoleMessage(ws.player.name + ' joined the game', 'Server');
     this.broadcastAll(welcome);
 
     let gameState = new GameStateMessage(this.game);
     ws.send(gameState.asString());
 
-    ws.on('close', () => {
-      this.game.removePlayer(ws.player);
-      console.log(ws.player.name + ' left the game');
-    });
     ws.on('message', message => this.onMessage(message, ws))
+    ws.on('close', () => this.onClose(ws));
+  }
+
+  onClose(ws) {
+    this.game.removePlayer(ws.player);
+    let leaving = new ConsoleMessage(ws.player.name + ' left the game', 'Server');
+    this.broadcastAll(leaving);
   }
 
   onMessage(message, ws) {

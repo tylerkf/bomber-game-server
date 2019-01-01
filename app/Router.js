@@ -9,7 +9,7 @@ const ConsoleMessage = require('./message/send/ConsoleMessage.js');
 const PlayerStateHandler = require('./message/recieve/PlayerStateHandler.js');
 const PlaceBombHandler = require('./message/recieve/PlaceBombHandler.js');
 
-const Authenticator = require('./Authenticator.js');
+const Authenticator = require('./utils/Authenticator.js');
 
 class Router {
 

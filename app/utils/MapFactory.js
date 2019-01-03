@@ -26,7 +26,7 @@ class MapFactory {
     let woodBoxes = this._generateWoodBoxes(size, game);
     this._addEntities(game, woodBoxes);
 
-    this._testMovingBox(game);
+    //this._testMovingBox(game);
   }
 
   static _generateGridBoundaries(size) {

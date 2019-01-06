@@ -1,4 +1,3 @@
-const uuid = require('uuid/v1');
 const url = require('url');
 const WebSocket = require('ws');
 

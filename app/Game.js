@@ -16,28 +16,39 @@ class Game {
       box: [],
       bomb: []
     };
+
+    this.eventSubscribers = [];
+  }
+
+  pushEvent(event) {
+    this.events.push(event);
+    this.eventSubscribers.forEach((handler) => {handler.onEvent(event.type)});
+  }
+
+  subscribeToEvents(handler) {
+    this.eventSubscribers.push(handler);
   }
 
   addPlayer(name) {
     let player = new Player(name);
     this.players.push(player);
-    this.events.push(new PlayerAddedEvent(player));
+    this.pushEvent(new PlayerAddedEvent(player));
     return player;
   }
 
   removePlayer(player) {
-    this.events.push(new PlayerRemovedEvent(player));
+    this.pushEvent(new PlayerRemovedEvent(player));
     this.players = this.players.filter(p => p.name !== player.name);
   }
 
   add(entity) {
     this.map[entity.object.type].push(entity);
-    this.events.push(new EntityAddedEvent(entity));
+    this.pushEvent(new EntityAddedEvent(entity));
   }
 
   remove(entity) {
     this.map[entity.object.type] = this.map[entity.object.type].filter(e => e.tag !== entity.tag);
-    this.events.push(new EntityRemovedEvent(entity));
+    this.pushEvent(new EntityRemovedEvent(entity));
   }
 
   clearEvents() {

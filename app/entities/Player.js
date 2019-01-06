@@ -1,5 +1,6 @@
 const BombEntity = require('./BombEntity.js');
 const ExplosionEvent = require('../events/ExplosionEvent.js');
+const PlayerKilledEvent = require('../events/PlayerKilledEvent.js');
 
 class Player {
   constructor(name) {
@@ -29,14 +30,11 @@ class Player {
     bomb.prime(game);
   }
 
-  kill() {
-    console.log(this.name + ' died');
+  kill(game) {
     this.isdead = true;
+    game.pushEvent(new PlayerKilledEvent(this));
+    console.log(this.name + ' died');
     this.position = [0, 0, 0];
-
-    setTimeout(() => {
-      this.isdead = false;
-    }, 3000);
   }
 }
 

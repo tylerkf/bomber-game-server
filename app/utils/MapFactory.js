@@ -86,7 +86,7 @@ class MapFactory {
       } else {
         movingBox.object.position[1]+=0.05;
       }
-      game.events.push(new EntityMovedEvent(movingBox));
+      game.pushEvent(new EntityMovedEvent(movingBox));
     }, 50);
   }
 

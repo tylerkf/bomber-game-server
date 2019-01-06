@@ -21,14 +21,14 @@ class BombEntity extends Entity {
 
   explode(game, causedBy) {
     let center = this.object.position;
-    game.events.push(new ExplosionEvent(center));
-    game.getPlayers(center).forEach(p => p.kill());
+    game.pushEvent(new ExplosionEvent(center));
+    game.getPlayers(center).forEach(p => p.kill(game));
 
     [[1,0], [-1,0], [0,1], [0,-1]].forEach((dir) => {
       for(let j = 1; j <= this.object.level; j++) {
         let pos = [center[0] + j * dir[0], center[1] + j * dir[1]];
         if(this._explodeAt(pos, game, causedBy)) {
-          game.getPlayers(pos).forEach(p => p.kill());
+          game.getPlayers(pos).forEach(p => p.kill(game));
         } else {
           break;
         }
@@ -49,12 +49,12 @@ class BombEntity extends Entity {
     if(typeof box === 'undefined') {
       let bomb = game.getBomb(position);
       if(typeof bomb === 'undefined') {
-        game.events.push(new ExplosionEvent(position));
+        game.pushEvent(new ExplosionEvent(position));
       } else {
         bomb.explode(game, this);
       }
     } else if (box.object.texture === 'Wood'){
-      game.events.push(new ExplosionEvent(position));
+      game.pushEvent(new ExplosionEvent(position));
       game.remove(box);
     } else {
       return false;

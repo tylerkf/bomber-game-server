@@ -70,11 +70,11 @@ class Router {
     let bytes = message.asString();
 
     if(message instanceof ConsoleMessage) {
-      console.log(message.text);
+      console.log('broadcast: ' + message.text);
     }
 
     this.wss.clients.forEach(ws => {
-      if(ws.readyState === WebSocket.OPEN && ws.player.name !== except) {
+      if(ws.readyState === WebSocket.OPEN && !(ws.player && ws.player.name === except)) {
         ws.send(bytes);
       }
     });

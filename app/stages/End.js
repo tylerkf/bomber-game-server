@@ -5,9 +5,13 @@ class StageEnd extends Stage {
   start() {
     getScheduler().setCurrentStage(this);
 
+    getGame().players.forEach((p) => {
+      p.state = 'idle';
+    });
+
     setTimeout(() => {
       this.nextStage.start();
-    }, 3000);
+    }, 10000);
   }
 }
 

@@ -13,7 +13,7 @@ class Player {
   }
 
   updatePosition(position, velocity, state) {
-    if(!this.isdead) {
+    if(!this.isdead && !getScheduler().hasEnded()) {
       this.position = position;
       this.velocity = velocity;
       this.state = state;
@@ -25,13 +25,20 @@ class Player {
   }
 
   placeBomb() {
-    let bomb = new BombEntity(this.level, this.getGridPosition());
+    if(!getScheduler().isPlaying()) {
+      return;
+    }
 
+    let bomb = new BombEntity(this.level, this.getGridPosition());
     getGame().add(bomb);
     bomb.prime();
   }
 
   kill() {
+    if(!getScheduler().isPlaying()) {
+      return;
+    }
+
     this.isdead = true;
     getGame().pushEvent(new PlayerKilledEvent(this));
     console.log(this.name + ' died');

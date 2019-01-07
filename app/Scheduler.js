@@ -28,6 +28,10 @@ class Scheduler {
     return (this.currentStage instanceof StagePlaying);
   }
 
+  hasEnded() {
+    return (this.currentStage instanceof StageEnd);
+  }
+
   setCurrentStage(stage) {
     console.log('Game entered stage ' + stage.getType());
     this.currentStage = stage;

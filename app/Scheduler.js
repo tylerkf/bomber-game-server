@@ -5,21 +5,27 @@ const StageEnd = require('./stages/End.js');
 
 class Scheduler {
   constructor(game, router) {
-    this.currentStage = null;
-
-    let load = new StageLoading(this, game, router);
-    let waiting = new StageWaiting(this, game, router);
-    let playing = new StagePlaying(this, game, router);
-    let end = new StageEnd(this, game, router);
+    let load = new StageLoading();
+    let waiting = new StageWaiting();
+    let playing = new StagePlaying();
+    let end = new StageEnd();
 
     load.nextStage = waiting;
     waiting.nextStage = playing;
     playing.nextStage = end;
     end.nextStage = load;
 
-    game.subscribeToEvents(this);
+    this.currentStage = load;
 
-    load.start();
+    game.subscribeToEvents(this);
+  }
+
+  startLoop() {
+    this.currentStage.start();
+  }
+
+  isPlaying() {
+    return (this.currentStage instanceof StagePlaying);
   }
 
   setCurrentStage(stage) {

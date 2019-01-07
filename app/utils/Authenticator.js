@@ -1,6 +1,5 @@
 class Authenticator {
-  constructor(game) {
-    this.game = game;
+  constructor() {
     this.onHandshake = this.onHandshake.bind(this);
   }
 
@@ -10,7 +9,7 @@ class Authenticator {
       if(params.hasOwnProperty('name')) {
         let requestedName = params['name'];
 
-        if(this.game.players.find(p => p.name === requestedName)) {
+        if(getGame().players.find(p => p.name === requestedName)) {
           return false;
         }
 

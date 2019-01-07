@@ -24,15 +24,16 @@ class Player {
     return [Math.round(this.position[0]),Math.round(this.position[1])];
   }
 
-  placeBomb(game) {
+  placeBomb() {
     let bomb = new BombEntity(this.level, this.getGridPosition());
-    game.add(bomb);
-    bomb.prime(game);
+
+    getGame().add(bomb);
+    bomb.prime();
   }
 
-  kill(game) {
+  kill() {
     this.isdead = true;
-    game.pushEvent(new PlayerKilledEvent(this));
+    getGame().pushEvent(new PlayerKilledEvent(this));
     console.log(this.name + ' died');
     this.position = [0, 0, 0];
   }

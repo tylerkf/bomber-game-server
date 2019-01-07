@@ -2,19 +2,18 @@ const Message = require('./Message.js');
 
 class GameStateUpdateMessage extends Message {
 
-  constructor(game) {
+  constructor() {
     super('game state update');
-    this.game = game;
   }
 
   generate() {
     let capture  = JSON.stringify({
       type: this.type,
-      players: this.game.players,
-      events: this.game.events
+      players: getGame().players,
+      events: getGame().events
     });
 
-    this.game.clearEvents();
+    getGame().clearEvents();
     return capture;
   }
 

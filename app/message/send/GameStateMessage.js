@@ -2,15 +2,14 @@ const Message = require('./Message.js');
 
 class GameStateMessage extends Message {
 
-  constructor(game) {
+  constructor() {
     super('game state');
-    this.game = game;
   }
 
   generate() {
     return {
-      players: this.game.players,
-      map: this.game.map,
+      players: getGame().players,
+      map: getGame().map,
     };
   }
 

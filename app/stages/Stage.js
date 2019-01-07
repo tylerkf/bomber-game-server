@@ -1,14 +1,10 @@
 class Stage {
-  constructor(scheduler, game, router, relevantEvents = []) {
-    this.game = game;
-    this.router = router;
-    this.scheduler = scheduler;
-
+  constructor(relevantEvents = []) {
     this.relevantEvents = relevantEvents;
   }
 
   start() {
-    this.scheduler.setCurrentStage(this);
+    getScheduler().setCurrentStage(this);
   }
 
   canProceed() {

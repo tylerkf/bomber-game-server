@@ -5,21 +5,18 @@ const MapFactory = require('../utils/MapFactory.js');
 
 
 class StageLoading extends Stage {
-  constructor(scheduler, game, router) {
-    super(scheduler, game, router);
-  }
 
   start() {
-    this.scheduler.setCurrentStage(this);
+    getScheduler().setCurrentStage(this);
 
-    this.game.players.forEach((p) => {
+    getGame().players.forEach((p) => {
       p.position = [0, 0, 0];
       p.isdead = false;
     });
 
-    this.router.broadcastAll(new ConsoleMessage('Loading new map', 'server'));
-    MapFactory.clearMap(this.game);
-    MapFactory.createStartingMap(this.game, 15);
+    getRouter().broadcastAll(new ConsoleMessage('Loading new map', 'server'));
+    MapFactory.clearMap(getGame());
+    MapFactory.createStartingMap(getGame(), 15);
 
     this.nextStage.start();
   }

@@ -15,6 +15,17 @@ const game = new Game();
 const router = new Router(game, server);
 const scheduler = new Scheduler(game, router);
 
+/*
+The only 3 global variables across the entire project. Open to ideas on how to
+avoid using globals without having to pass them as arguments multiple times to
+lower level objects
+*/
+global.getGame = () => { return game; };
+global.getRouter = () => { return router; };
+global.getScheduler = () => { return scheduler; };
+
+scheduler.startLoop();
+
 server.listen(3001);
 server.on('error', onError);
 server.on('listening', onListening);

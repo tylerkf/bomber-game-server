@@ -1,12 +1,9 @@
 const Stage = require('./Stage.js');
 
 class StageEnd extends Stage {
-  constructor(scheduler, game, router) {
-    super(scheduler, game, router);
-  }
 
   start() {
-    this.scheduler.setCurrentStage(this);
+    getScheduler().setCurrentStage(this);
 
     setTimeout(() => {
       this.nextStage.start();

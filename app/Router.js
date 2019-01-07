@@ -5,6 +5,8 @@ const GameStateMessage = require('./message/send/GameStateMessage.js');
 const GameStateUpdateMessage = require('./message/send/GameStateUpdateMessage.js');
 const ConsoleMessage = require('./message/send/ConsoleMessage.js');
 
+const TitleMessageUpdateEvent = require('./events/TitleMessageUpdate.js');
+
 const PlayerStateHandler = require('./message/recieve/PlayerStateHandler.js');
 const PlaceBombHandler = require('./message/recieve/PlaceBombHandler.js');
 
@@ -31,6 +33,11 @@ class Router {
     setInterval(() => {
       this.broadcastAll(gameStateUpdate);
     }, 33);
+  }
+
+  setTitleMessage(title) {
+    this.currentTitle = title;
+    getGame().pushEvent(new TitleMessageUpdateEvent(title));
   }
 
   onConnection(ws, req) {

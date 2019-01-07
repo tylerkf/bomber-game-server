@@ -10,6 +10,7 @@ class GameStateMessage extends Message {
     return {
       players: getGame().players,
       map: getGame().map,
+      currentTitle: getRouter().currentTitle
     };
   }
 

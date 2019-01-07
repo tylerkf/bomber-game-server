@@ -9,7 +9,7 @@ class StageWaiting extends Stage {
 
   start() {
     getScheduler().setCurrentStage(this);
-    this.onEvent();
+    getRouter().setTitleMessage('Need ' + PLAYERS_TO_START + ' players to start...');
   }
 
   canProceed() {

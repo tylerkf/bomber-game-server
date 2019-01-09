@@ -13,11 +13,7 @@ class StageWaiting extends Stage {
   }
 
   canProceed() {
-    if(getGame().players.length >= PLAYERS_TO_START) {
-      return true;
-    } else {
-      return false;
-    }
+    return getGame().players.length >= PLAYERS_TO_START;
   }
 }
 

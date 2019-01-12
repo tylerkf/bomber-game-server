@@ -37,8 +37,8 @@ class Game {
   }
 
   removePlayer(player) {
-    this.pushEvent(new PlayerRemovedEvent(player));
     this.players = this.players.filter(p => p.name !== player.name);
+    this.pushEvent(new PlayerRemovedEvent(player));
   }
 
   add(entity) {

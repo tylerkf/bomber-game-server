@@ -8,12 +8,13 @@ class Player {
     this.state = 'idle';
     this.position = [0, 0, 0];
     this.velocity = [0, 0, 0];
-    this.isdead = false;
+    this.isdead = true;
+    this.frozen = true;
     this.level = 1;
   }
 
-  updatePosition(position, velocity, state) {
-    if(!this.isdead && !getScheduler().hasEnded()) {
+  update(position, velocity, state) {
+    if(!this.isdead && !this.frozen) {
       this.position = position;
       this.velocity = velocity;
       this.state = state;

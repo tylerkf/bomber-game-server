@@ -6,6 +6,8 @@ class StageEnd extends Stage {
     getScheduler().setCurrentStage(this);
 
     getGame().players.forEach((p) => {
+      p.frozen = true;
+      p.velocity = [0, 0, 0];
       p.state = 'idle';
     });
 

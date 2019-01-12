@@ -8,6 +8,15 @@ class StagePlaying extends Stage {
 
   start() {
     getScheduler().setCurrentStage(this);
+
+    getGame().players.forEach((p) => {
+      //let spawn = Spawn.createSpawnPoint(getGame(), 15);
+      //p.position = [spawn[0], spawn[1], 0];
+      p.position = [0, 0, 0];
+      p.isdead = false;
+      p.frozen = false;
+    });
+
     getRouter().broadcastAll(new ConsoleMessage('Game started...', 'server'));
     getRouter().setTitleMessage('');
   }
